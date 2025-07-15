@@ -1,45 +1,65 @@
 package com.example.deploy.controllers;
+import com.example.deploy.models.RegisterDetails;
+import com.example.deploy.models.UserDetailsDto;
+import com.example.deploy.services.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.models.RegisterDetails;
-import com.example.demo.services.EmployeeService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
-public class EmployeeControllerTest {
+    @RestController
+    public class EmployeeController {
 
-    @Mock
-    EmployeeService employeeService;
+        @Autowired
+        private EmployeeService employeeService;
 
-    @InjectMocks
-    EmployeeController employeeController;
+        @PreAuthorize("hasAnyRole('ADMIN','USER')")
+        @GetMapping("/")
+        public String route(){
+            return "Welcome to SpringBoot Security";
+        }
 
-    @BeforeEach
-    void setUp(){
-        MockitoAnnotations.openMocks(this);
+
+        @GetMapping("/employee")
+        @PreAuthorize("hasAnyRole('ADMIN','USER')")
+        public List<RegisterDetails> getMethod(){
+            return employeeService.getMethod();
+        }
+
+
+        @GetMapping("/employee/{empId}")
+        @PreAuthorize("hasAnyRole('USER')")
+        public RegisterDetails getEmployeeById(@PathVariable int empId){
+            System.out.println();
+            return employeeService.getEmployeeById(empId);
+        }
+
+
+
+//    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+//    @GetMapping("/employee/job/{job}")
+//    public List<RegisterDetails> getEmployeeByJob(@PathVariable String job){
+//        return employeeService.getEmployeeByJob(job);
+//    }
+
+        @PreAuthorize("hasRole('ADMIN')")
+        @PostMapping("/employee")
+        public String postMethod(@RequestBody UserDetailsDto employee){
+//        Employee employee = new Employee(5,"Sivagami", "Business");
+            return employeeService.addNewEmployee(employee);
+        }
+
+        @PreAuthorize("hasRole('ADMIN')")
+        @PutMapping("/employee/{empId}")
+        public String putMethod(@PathVariable int empId){
+            return employeeService.updateEmployee(empId);
+        }
+
+        @PreAuthorize("hasRole('ADMIN')")
+        @DeleteMapping("/employee/{empID}")
+        public String deleteMethod(@PathVariable int empID){
+            return employeeService.deleteEmployeeById(empID);
+        }
     }
-
-    @Test
-    void testRoute(){
-        String result = employeeController.route();
-        assertEquals("Welcome to Spring Boot",result);
-    }
-
-
-    @Test
-    void testGetMethod(){
-        RegisterDetails emp1 = new RegisterDetails();
-        RegisterDetails emp2 = new RegisterDetails();
-        when(employeeService.getMethod()).thenReturn(Arrays.asList(emp1 , emp2));
-        List<RegisterDetails> result = employeeController.getMethod();
-        assertEquals(2,result.size());
-    }
-}
