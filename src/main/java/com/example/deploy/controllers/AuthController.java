@@ -12,7 +12,7 @@ public class AuthController {
     @Autowired
     private AuthService svc;
 
-    @PostMapping("/register")
+    @PostMapping("/reg")
     public String register(@RequestBody UserDetailsDto dto) {
         return svc.register(dto);
     }

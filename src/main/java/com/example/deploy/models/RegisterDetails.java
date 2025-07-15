@@ -3,6 +3,7 @@ package com.example.deploy.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Arrays;
 import java.util.Set;
 
 @Entity
