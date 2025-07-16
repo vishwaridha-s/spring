@@ -54,6 +54,7 @@ import java.util.List;
         @PreAuthorize("hasRole('ADMIN')")
         @PutMapping("/employee/{empId}")
         public String putMethod(@PathVariable int empId){
+
             return employeeService.updateEmployee(empId);
         }
 

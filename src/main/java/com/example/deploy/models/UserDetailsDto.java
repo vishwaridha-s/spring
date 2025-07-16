@@ -3,7 +3,9 @@ package com.example.deploy.models;
 import lombok.*;
 import java.util.Set;
 
-@Data @NoArgsConstructor @AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDetailsDto {
     private String name;
     private String email;
